@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MapsApp</string>
+    <string name="mapbox_access_token">pk.eyJ1IjoieWFubm5uYXNoIiwiYSI6ImNrenlodHpkdDAwZ2YzY3QxOW0xamdyM3kifQ.XV-SU2prCnh60mKQZ_nA4g</string>
+    <string name="loading_label">Loading locations...</string>
+</resources>
