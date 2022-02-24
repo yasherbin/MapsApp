@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MapsApp</string>
+    <string name="loading_label">Загрузка локаций…</string>
+    <string name="refresh_button_label">обновить</string>
+    <string name="dialog_message">Ошибка загрузки локаций. Пожалуйста, проверьте интернет-соединение и повторите попытку.</string>
+    <string name="positive_button">Повторить</string>
+    <string name="negative_button">Отмена</string>
+    <string name="dialog_title">Не удалось загрузить</string>
+</resources>

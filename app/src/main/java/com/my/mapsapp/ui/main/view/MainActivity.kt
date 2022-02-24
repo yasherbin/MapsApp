@@ -8,11 +8,13 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.DrawableRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.mapbox.geojson.Point
+import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
 import com.mapbox.maps.Style
 import com.mapbox.maps.plugin.annotation.annotations
@@ -30,7 +32,8 @@ import com.my.mapsapp.ui.main.viewmodel.MainViewModel
 var mapView: MapView? = null
 private lateinit var binding: ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : FragmentActivity(),
+    FailureDialogFragment.FailureDialogListener {
 
     private lateinit var viewModel: MainViewModel
 
@@ -46,21 +49,24 @@ class MainActivity : AppCompatActivity() {
         val annotationApi = mapView?.annotations
         val pointAnnotationManager = annotationApi?.createPointAnnotationManager()
 
-        viewModel.errorMessage.observe(this, {
-        })
-
+        viewModel.isError.observe(this) {
+            if (it) {
+                pointAnnotationManager?.deleteAll()
+                binding.bottomPane.visibility = View.GONE
+                showFailureDialog()
+            }
+        }
         viewModel.loading.observe(this, Observer {
             if (it) {
                 binding.loadingTextView.visibility = View.VISIBLE
-                binding.previousButton.visibility = View.GONE
-                binding.nextButton.visibility = View.GONE
+                binding.bottomPane.visibility = View.GONE
+                binding.refreshButton.visibility = View.GONE
             } else {
                 binding.loadingTextView.visibility = View.GONE
-                binding.previousButton.visibility = View.VISIBLE
-                binding.nextButton.visibility = View.VISIBLE
+                binding.bottomPane.visibility = View.VISIBLE
+                binding.refreshButton.visibility = View.VISIBLE
             }
         })
-
         viewModel.locationsList.observe(this) { list ->
             mapView?.getMapboxMap()?.loadStyleUri(
                 Style.MAPBOX_STREETS
@@ -80,6 +86,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
         viewModel.getLocations()
+        binding.refreshButton.setOnClickListener {
+            viewModel.getLocations()
+        }
     }
 
     private fun addAnnotationToMap(
@@ -90,11 +99,18 @@ class MainActivity : AppCompatActivity() {
             this@MainActivity,
             R.drawable.red_marker
         )?.let {
+            val point = Point.fromLngLat(location.latlng[1], location.latlng[0])
             val pointAnnotationOptions: PointAnnotationOptions = PointAnnotationOptions()
-                .withPoint(Point.fromLngLat(location.latlng[1], location.latlng[0]))
+                .withPoint(point)
                 .withIconImage(it)
             pointAnnotationManager?.deleteAll()
             pointAnnotationManager?.create(pointAnnotationOptions)
+            val cameraPosition = CameraOptions.Builder()
+                .zoom(3.0)
+                .center(point)
+                .build()
+            mapView?.getMapboxMap()?.setCamera(cameraPosition)
+            binding.nameView.text = location.name
         }
     }
 
@@ -120,6 +136,19 @@ class MainActivity : AppCompatActivity() {
             drawable.draw(canvas)
             bitmap
         }
+    }
+
+    private fun showFailureDialog() {
+        val dialog = FailureDialogFragment()
+        dialog.show(supportFragmentManager, "FailureDialogFragment")
+    }
+
+    override fun onDialogPositiveClick(dialog: DialogFragment) {
+        viewModel.getLocations()
+    }
+
+    override fun onDialogNegativeClick(dialog: DialogFragment) {
+        binding.refreshButton.visibility = View.VISIBLE
     }
 
     override fun onStart() {

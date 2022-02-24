@@ -7,24 +7,33 @@ import com.my.mapsapp.data.repository.MainRepository
 import kotlinx.coroutines.*
 
 class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
-    val errorMessage = MutableLiveData<String>()
+    val isError = MutableLiveData<Boolean>()
     val locationsList = MutableLiveData<List<Location>>()
     var job: Job? = null
+    private val exceptionHandler = CoroutineExceptionHandler { _, _ ->
+        onError()
+    }
     val loading = MutableLiveData<Boolean>()
 
     fun getLocations() {
-        job = CoroutineScope(Dispatchers.IO).launch {
+        isError.value=false
+        loading.value=true
+        job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
             val response = mainRepository.getLocations()
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     locationsList.postValue(response.body())
                     loading.value = false
                 } else {
-                    errorMessage.postValue("Error : ${response.message()} ")
-                    loading.postValue(false)
+                    onError()
                 }
             }
         }
+    }
+
+    private fun onError() {
+        loading.postValue(false)
+        isError.postValue(true)
     }
 
     override fun onCleared() {
