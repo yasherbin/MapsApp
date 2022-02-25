@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="button_size">50dp</dimen>
-    <dimen name="margin_bottom">32dp</dimen>
-    <dimen name="text_size">28sp</dimen>
+    <dimen name="button_size">32dp</dimen>
+    <dimen name="button_text_size">20dp</dimen>
+    <dimen name="margin">24dp</dimen>
+    <dimen name="text_size">24sp</dimen>
+    <dimen name="elevation">8dp</dimen>
+    <dimen name="horizontal_padding">32dp</dimen>
+    <dimen name="card_view_min_height">64dp</dimen>
+    <dimen name="layout_padding">8dp</dimen>
 </resources>

@@ -1,11 +1,11 @@
 package com.my.mapsapp.ui.main.view
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.my.mapsapp.R
 
 class FailureDialogFragment : DialogFragment() {
@@ -14,8 +14,7 @@ class FailureDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
-            val builder = AlertDialog.Builder(it)
-
+            val builder = MaterialAlertDialogBuilder(requireContext())
             builder.setTitle(getString(R.string.dialog_title))
                 .setMessage(R.string.dialog_message)
                 .setPositiveButton(R.string.positive_button,

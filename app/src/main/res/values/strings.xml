@@ -2,9 +2,9 @@
     <string name="app_name">MapsApp</string>
     <string name="mapbox_access_token" translatable="false">pk.eyJ1IjoieWFubm5uYXNoIiwiYSI6ImNrenlodHpkdDAwZ2YzY3QxOW0xamdyM3kifQ.XV-SU2prCnh60mKQZ_nA4g</string>
     <string name="loading_label">Loading locations…</string>
-    <string name="refresh_button_label">refresh</string>
+    <string name="refresh_button_label">REFRESH</string>
     <string name="dialog_title">Load failed</string>
     <string name="dialog_message">There was a problem loading locations. Please, check your Internet connection and try again.</string>
-    <string name="positive_button">Try again</string>
-    <string name="negative_button">Cancel</string>
+    <string name="positive_button">TRY LOAD AGAIN</string>
+    <string name="negative_button">WHATEVER</string>
 </resources>

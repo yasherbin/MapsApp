@@ -2,9 +2,9 @@
 <resources>
     <string name="app_name">MapsApp</string>
     <string name="loading_label">Загрузка локаций…</string>
-    <string name="refresh_button_label">обновить</string>
+    <string name="refresh_button_label">ОБНОВИТЬ</string>
     <string name="dialog_message">Ошибка загрузки локаций. Пожалуйста, проверьте интернет-соединение и повторите попытку.</string>
-    <string name="positive_button">Повторить</string>
+    <string name="positive_button">Повторить загрузку</string>
     <string name="negative_button">Отмена</string>
     <string name="dialog_title">Не удалось загрузить</string>
 </resources>

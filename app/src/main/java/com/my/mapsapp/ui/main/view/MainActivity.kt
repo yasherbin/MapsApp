@@ -17,6 +17,7 @@ import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
 import com.mapbox.maps.Style
+import com.mapbox.maps.plugin.animation.flyTo
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
@@ -29,13 +30,12 @@ import com.my.mapsapp.databinding.ActivityMainBinding
 import com.my.mapsapp.ui.base.ViewModelFactory
 import com.my.mapsapp.ui.main.viewmodel.MainViewModel
 
-var mapView: MapView? = null
-private lateinit var binding: ActivityMainBinding
-
 class MainActivity : FragmentActivity(),
     FailureDialogFragment.FailureDialogListener {
 
     private lateinit var viewModel: MainViewModel
+    var mapView: MapView? = null
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,12 +52,15 @@ class MainActivity : FragmentActivity(),
         viewModel.isError.observe(this) {
             if (it) {
                 pointAnnotationManager?.deleteAll()
+                binding.cardView.visibility = View.GONE
                 binding.bottomPane.visibility = View.GONE
+                binding.refreshButton.visibility = View.GONE
                 showFailureDialog()
             }
         }
         viewModel.loading.observe(this, Observer {
             if (it) {
+                binding.cardView.visibility = View.VISIBLE
                 binding.loadingTextView.visibility = View.VISIBLE
                 binding.bottomPane.visibility = View.GONE
                 binding.refreshButton.visibility = View.GONE
@@ -109,7 +112,7 @@ class MainActivity : FragmentActivity(),
                 .zoom(3.0)
                 .center(point)
                 .build()
-            mapView?.getMapboxMap()?.setCamera(cameraPosition)
+            mapView?.getMapboxMap()?.flyTo(cameraPosition)
             binding.nameView.text = location.name
         }
     }
